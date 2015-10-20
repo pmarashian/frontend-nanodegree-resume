@@ -44,25 +44,25 @@ bio = {
         var header = $("#header"),
             topContacts = $("#topContacts");
 
-        addToPage( header, HTMLheaderRole, bio.role, false );
-        addToPage( header, HTMLheaderName, bio.name, false );
-        addToPage( header, HTMLwelcomeMsg, bio.welcomeMessage, true );
-        addToPage( header, HTMLbioPic, bio.biopic, true );
+        addToPage( header, HTMLheaderRole, this.role, false );
+        addToPage( header, HTMLheaderName, this.name, false );
+        addToPage( header, HTMLwelcomeMsg, this.welcomeMessage, true );
+        addToPage( header, HTMLbioPic, this.biopic, true );
 
-        addToPage( topContacts, HTMLmobile, bio.contacts.mobile, true );
-        addToPage( topContacts, HTMLgithub, bio.contacts.github, true );
-        addToPage( topContacts, HTMLemail, bio.contacts.email, true );
-        addToPage( topContacts, HTMLlocation, bio.contacts.location, true );
+        addToPage( topContacts, HTMLmobile, this.contacts.mobile, true );
+        addToPage( topContacts, HTMLgithub, this.contacts.github, true );
+        addToPage( topContacts, HTMLemail, this.contacts.email, true );
+        addToPage( topContacts, HTMLlocation, this.contacts.location, true );
 
-        if( bio.skills.length ) {
+        if( this.skills.length ) {
 
             header.append( HTMLskillsStart );
 
             var skillDiv = $("#skills");
 
-            for( var skill in bio.skills ) {
+            for( var skill in this.skills ) {
 
-                addToPage( skillDiv, HTMLskills, bio.skills[skill], true );
+                addToPage( skillDiv, HTMLskills, this.skills[skill], true );
 
             }
 
@@ -96,17 +96,17 @@ work = {
             activeJob,
             jobDiv;
 
-        if( work.jobs.length ) {
+        if( this.jobs.length ) {
 
             workExperience = $("#workExperience");
 
-            for( var job in work.jobs ) {
+            for( var job in this.jobs ) {
 
                 workExperience.append( HTMLworkStart );
 
                 jobDiv = $(".work-entry:last");
 
-                activeJob = work.jobs[ job ];
+                activeJob = this.jobs[ job ];
 
                 // employer and title have split templates that need to be rendered together.
                 jobEmployer = renderTemplate( HTMLworkEmployer, activeJob.employer );
@@ -137,24 +137,29 @@ projects = {
     "display" : function() {
 
         var activeProject,
-            projectEl;
+            projectDiv;
 
-        for( i in this.projects ) {
+        if( this.projects.length ) {
 
-            $("#projects").append( HTMLprojectStart );
+            for( var project in this.projects ) {
 
-            activeProject = this.projects[i];
-            projectEl = $(".project-entry:last");
+                $("#projects").append( HTMLprojectStart );
 
-            projectEl.append( HTMLprojectTitle.replace( placeholder, activeProject.title) );
-            projectEl.append( HTMLprojectDates.replace( placeholder, activeProject.dates) );
-            projectEl.append( HTMLprojectDescription.replace( placeholder, activeProject.description) );
+                activeProject = this.projects[project];
 
-            if( activeProject.images.length ) {
+                projectDiv = $(".project-entry:last");
 
-                for( image in activeProject.images ) {
+                addToPage( projectDiv, HTMLprojectTitle, activeProject.title, true );
+                addToPage( projectDiv, HTMLprojectDates, activeProject.dates, true );
+                addToPage( projectDiv, HTMLprojectDescription, activeProject.description, true );
 
-                    projectEl.append( HTMLprojectImage.replace( placeholder, activeProject.images[image]) );
+                if( activeProject.images.length ) {
+
+                    for( var image in activeProject.images ) {
+
+                        addToPage( projectDiv, HTMLprojectImage, activeProject.images[image], true );
+
+                    }
 
                 }
 
