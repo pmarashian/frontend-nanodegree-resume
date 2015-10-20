@@ -1,0 +1,22 @@
+{
+  "name": "frontend-nanodegree-resume",
+  "version": "0.0.0",
+  "homepage": "https://github.com/pmarashian/frontend-nanodegree-resume",
+  "authors": [
+    "Phillip Marashian <phillip@ptcdental.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "~1.1.5"
+  }
+}

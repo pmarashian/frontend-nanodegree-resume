@@ -1,0 +1,47 @@
+#header {
+    background-color: #aeaeae;
+}
+
+    #header .orange-text,
+    h1,
+    #skills-h3,
+    .welcome-message {
+        color: #000;
+    }
+
+    #header .white-text {
+        color: #000;
+    }
+
+#workExperience {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+    #workExperience h2 {
+        flex: 1 100%;
+        margin: auto;
+    }
+
+.work-entry {
+    flex: 2;
+}
+
+.biopic,
+.project-image {
+    border-radius: 50%;
+    transition: border-radius 150ms ease;
+    -moz-transition: border-radius 150ms ease;
+    -webkit-transition: border-radius 150ms ease;
+}
+
+    .biopic:hover,
+    .project-image:hover {
+        border-radius: 0;
+    }
+
+@media only screen and (max-width: 750px) {
+    .work-entry {
+        flex: 1 100%;
+    }
+}

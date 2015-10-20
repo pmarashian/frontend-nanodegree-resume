@@ -1,30 +1,7 @@
 var bio,
     work,
     projects,
-    education,
-    placeholder = "%data%";
-
-function renderTemplate( template, data ) {
-
-    return template.replace( placeholder, data );
-
-}
-
-function addToPage( div, template, data, append ) {
-
-    var formattedText = renderTemplate( template, data );
-
-    if( append ) {
-
-        div.append( formattedText );
-
-    } else {
-
-        div.prepend( formattedText );
-
-    }
-
-}
+    education;
 
 bio = {
     "name" : "Fruamros Gloryem",
@@ -41,28 +18,50 @@ bio = {
     "biopic" : "images/me.jpg",
     "display" : function() {
 
-        var header = $("#header"),
-            topContacts = $("#topContacts");
+        var skillDiv,
+            header = $("#header"),
+            topContacts = $("#topContacts"),
+            footerContacts = $("#footerContacts");
 
         addToPage( header, HTMLheaderRole, this.role, false );
         addToPage( header, HTMLheaderName, this.name, false );
-        addToPage( header, HTMLwelcomeMsg, this.welcomeMessage, true );
         addToPage( header, HTMLbioPic, this.biopic, true );
+        addToPage( header, HTMLwelcomeMsg, this.welcomeMessage, true );
 
         addToPage( topContacts, HTMLmobile, this.contacts.mobile, true );
         addToPage( topContacts, HTMLgithub, this.contacts.github, true );
         addToPage( topContacts, HTMLemail, this.contacts.email, true );
         addToPage( topContacts, HTMLlocation, this.contacts.location, true );
 
+        addToPage( footerContacts, HTMLmobile, this.contacts.mobile, true );
+        addToPage( footerContacts, HTMLgithub, this.contacts.github, true );
+        addToPage( footerContacts, HTMLemail, this.contacts.email, true );
+
         if( this.skills.length ) {
 
             header.append( HTMLskillsStart );
 
-            var skillDiv = $("#skills");
+            skillDiv = $("#skills");
 
             for( var skill in this.skills ) {
 
                 addToPage( skillDiv, HTMLskills, this.skills[skill], true );
+
+            }
+
+        }
+
+        function addToPage( div, template, data, append ) {
+
+            var formattedText = template.replace( "%data%", data );
+
+            if( append ) {
+
+                div.append( formattedText );
+
+            } else {
+
+                div.prepend( formattedText );
 
             }
 
@@ -90,15 +89,13 @@ work = {
     ],
     "display" : function() {
 
-        var workExperience,
-            jobEmployer,
+        var jobEmployer,
             jobTitle,
             activeJob,
-            jobDiv;
+            jobDiv,
+            workExperience = $("#workExperience");
 
         if( this.jobs.length ) {
-
-            workExperience = $("#workExperience");
 
             for( var job in this.jobs ) {
 
@@ -106,18 +103,32 @@ work = {
 
                 jobDiv = $(".work-entry:last");
 
-                activeJob = this.jobs[ job ];
+                activeJob = this.jobs[job];
 
                 // employer and title have split templates that need to be rendered together.
                 jobEmployer = renderTemplate( HTMLworkEmployer, activeJob.employer );
                 jobTitle = renderTemplate( HTMLworkTitle, activeJob.title );
 
-                addToPage( jobDiv, jobEmployer + jobTitle, "", true );
-                addToPage( jobDiv, HTMLworkLocation, activeJob.location, true );
-                addToPage( jobDiv, HTMLworkDates, activeJob.dates, true );
-                addToPage( jobDiv, HTMLworkDescription, activeJob.description, true );
+                addToPage( jobDiv, jobEmployer + jobTitle, "" );
+                addToPage( jobDiv, HTMLworkLocation, activeJob.location );
+                addToPage( jobDiv, HTMLworkDates, activeJob.dates );
+                addToPage( jobDiv, HTMLworkDescription, activeJob.description );
 
             }
+
+        }
+
+        function renderTemplate( template, data ) {
+
+            return template.replace( "%data%", data );
+
+        }
+
+        function addToPage( div, template, data ) {
+
+            var formattedText = renderTemplate( template, data );
+
+            div.append( formattedText );
 
         }
 
@@ -149,21 +160,29 @@ projects = {
 
                 projectDiv = $(".project-entry:last");
 
-                addToPage( projectDiv, HTMLprojectTitle, activeProject.title, true );
-                addToPage( projectDiv, HTMLprojectDates, activeProject.dates, true );
-                addToPage( projectDiv, HTMLprojectDescription, activeProject.description, true );
+                addToPage( projectDiv, HTMLprojectTitle, activeProject.title );
+                addToPage( projectDiv, HTMLprojectDates, activeProject.dates );
+                addToPage( projectDiv, HTMLprojectDescription, activeProject.description );
 
                 if( activeProject.images.length ) {
 
                     for( var image in activeProject.images ) {
 
-                        addToPage( projectDiv, HTMLprojectImage, activeProject.images[image], true );
+                        addToPage( projectDiv, HTMLprojectImage, activeProject.images[image] );
 
                     }
 
                 }
 
             }
+
+        }
+
+        function addToPage( div, template, data ) {
+
+            var formattedText = template.replace( "%data%", data );
+
+            div.append( formattedText );
 
         }
 
@@ -201,28 +220,68 @@ education = {
     "display" : function() {
 
         var activeSchool,
-            schoolEl,
+            activeDiv,
             schoolName,
-            schoolDegree;
+            schoolDegree,
+            activeCourse,
+            courseTitle,
+            courseSchool;
 
         if( this.schools.length ) {
-            for( i in this.schools ) {
+
+            for( var school in this.schools ) {
 
                 $("#education").append( HTMLschoolStart );
-                schoolEl = $(".education-entry:last");
 
-                activeSchool = this.schools[i];
+                activeDiv = $(".education-entry:last");
 
-                schoolName = HTMLschoolName.replace(placeholder, activeSchool.name );
-                schoolDegree = HTMLschoolDegree.replace(placeholder, activeSchool.degree);
+                activeSchool = this.schools[school];
 
-                schoolEl.append( schoolName + schoolDegree );
+                schoolName = renderTemplate( HTMLschoolName, activeSchool.name );
+                schoolDegree = renderTemplate( HTMLschoolDegree, activeSchool.degree );
 
-                schoolEl.append( HTMLschoolDates.replace(placeholder, activeSchool.dates) );
-                schoolEl.append( HTMLschoolMajor.replace(placeholder, activeSchool.major) );
-                schoolEl.append( HTMLschoolLocation.replace(placeholder, activeSchool.location) );
+                addToPage( activeDiv, schoolName + schoolDegree, "" );
+                addToPage( activeDiv, HTMLschoolDates, activeSchool.name );
+                addToPage( activeDiv, HTMLschoolMajor, activeSchool.name );
+                addToPage( activeDiv, HTMLschoolLocation, activeSchool.location );
 
             }
+        }
+
+        if( this.onlineCourses.length ) {
+
+            $("#education").append( HTMLonlineClasses );
+
+            for( var course in this.onlineCourses ) {
+
+                $("#education").append( HTMLschoolStart );
+
+                activeDiv = $(".education-entry:last");
+
+                activeCourse = this.onlineCourses[course];
+
+                courseTitle = renderTemplate( HTMLonlineTitle, activeCourse.title );
+                courseSchool = renderTemplate( HTMLonlineSchool, activeCourse.school );
+
+                addToPage( activeDiv, courseTitle + courseSchool, "" );
+                addToPage( activeDiv, HTMLonlineDates, activeCourse.date );
+                addToPage( activeDiv, HTMLonlineURL, activeCourse.url );
+
+            }
+        }
+
+        function renderTemplate( template, data ) {
+
+            return template.replace( "%data%", data );
+
+        }
+
+        function addToPage( div, template, data ) {
+
+            var formattedText = renderTemplate( template, data );
+
+            div.append( formattedText );
+
         }
 
     }
