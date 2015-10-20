@@ -1,68 +1,121 @@
-var header = $("#header"),
-    topContacts = $("#topContacts"),
-    workExperience = $("#workExperience");
+var bio,
+    work,
+    projects,
+    education,
+    placeholder = "%data%";
 
-var placeholder = "%data%";
+function renderTemplate( template, data ) {
 
-var work = {
+    return template.replace( placeholder, data );
 
+}
+
+function addToPage( div, template, data, append ) {
+
+    var formattedText = renderTemplate( template, data );
+
+    if( append ) {
+
+        div.append( formattedText );
+
+    } else {
+
+        div.prepend( formattedText );
+
+    }
+
+}
+
+bio = {
+    "name" : "Fruamros Gloryem",
+    "role" : "Web Developer",
+    "welcomeMessage" : "Hello! Thank you for visiting my resume. I know I can make your next amazing app!",
+    "skills" : ["HTML", "CSS", "javascript"],
+    "contacts" : {
+        "mobile" : "408-123-9187",
+        "email" : "fruamros.gloryem@gmail.com",
+        "github" : "fglorygem",
+        "twitter" : "@fgloryem",
+        "location" : "San Jose, CA"
+    },
+    "biopic" : "images/me.jpg",
+    "display" : function() {
+
+        var header = $("#header"),
+            topContacts = $("#topContacts");
+
+        addToPage( header, HTMLheaderRole, bio.role, false );
+        addToPage( header, HTMLheaderName, bio.name, false );
+        addToPage( header, HTMLwelcomeMsg, bio.welcomeMessage, true );
+        addToPage( header, HTMLbioPic, bio.biopic, true );
+
+        addToPage( topContacts, HTMLmobile, bio.contacts.mobile, true );
+        addToPage( topContacts, HTMLgithub, bio.contacts.github, true );
+        addToPage( topContacts, HTMLemail, bio.contacts.email, true );
+        addToPage( topContacts, HTMLlocation, bio.contacts.location, true );
+
+        if( bio.skills.length ) {
+
+            header.append( HTMLskillsStart );
+
+            var skillDiv = $("#skills");
+
+            for( var skill in bio.skills ) {
+
+                addToPage( skillDiv, HTMLskills, bio.skills[skill], true );
+
+            }
+
+        }
+
+    }
+};
+
+work = {
     "jobs" : [
         {
-            "employer" : "Productivity Training Corp",
-            "title" : "Full Stack Developer / Office Manager",
-            "location" : "Morgan Hill, CA, US",
-            "dates" : "2008 - Present",
-            "description" : "I do awesome stuff here."
-        },
-        {
-            "employer" : "Self-employed",
-            "title" : "Freelance Web Developer",
+            "employer" : "Magical Creatures Staffing",
+            "title" : "Temp Position: Kitchen Gnome",
             "location" : "San Jose, CA, US",
-            "dates" : "2009 - Present",
-            "description" : "Write awesome code."
-        }
-    ]
-
-};
-
-var projects = {
-    "projects" : [
-        {
-            "title" : "About Me",
-            "dates" : "October 2015",
-            "description" : "All about Phillip",
-            images: ["images/197x148.gif", "images/197x148.gif"]
+            "dates" : "2013 - Present",
+            "description" : "Responsible for timely switching of kitchen light. Awarded employee of the month twice for exceptional performance and reducing kitchen light energy usage by 12%. Looking for new employment as hours for this position vary greatly."
         },
         {
-            "title" : "Online Portfolio",
-            "dates" : "October 2015",
-            "description" : "What I've done.",
-            images: ["images/197x148.gif", "images/197x148.gif", "images/197x148.gif"]
+            "employer" : "Innocent Mischievousness",
+            "title" : "Dryer Elf",
+            "location" : "Brooklyn, IA, US",
+            "dates" : "2010 - 2013",
+            "description" : "Snatched socks from public laundromats. Responsible for 5 facilities. Beat company record of 4 single socks from one load."
         }
-    ]
-};
+    ],
+    "display" : function() {
 
-projects.display = function() {
+        var workExperience,
+            jobEmployer,
+            jobTitle,
+            activeJob,
+            jobDiv;
 
-    var activeProject,
-        projectEl;
+        if( work.jobs.length ) {
 
-    for( i in this.projects ) {
+            workExperience = $("#workExperience");
 
-        $("#projects").append( HTMLprojectStart );
+            for( var job in work.jobs ) {
 
-        activeProject = this.projects[i];
-        projectEl = $(".project-entry:last");
+                workExperience.append( HTMLworkStart );
 
-        projectEl.append( HTMLprojectTitle.replace( placeholder, activeProject.title) );
-        projectEl.append( HTMLprojectDates.replace( placeholder, activeProject.dates) );
-        projectEl.append( HTMLprojectDescription.replace( placeholder, activeProject.description) );
+                jobDiv = $(".work-entry:last");
 
-        if( activeProject.images.length ) {
+                activeJob = work.jobs[ job ];
 
-            for( image in activeProject.images ) {
+                // employer and title have split templates that need to be rendered together.
+                jobEmployer = renderTemplate( HTMLworkEmployer, activeJob.employer );
+                jobTitle = renderTemplate( HTMLworkTitle, activeJob.title );
 
-                projectEl.append( HTMLprojectImage.replace( placeholder, activeProject.images[image]) );
+                addToPage( jobDiv, jobEmployer + jobTitle, "", true );
+                addToPage( jobDiv, HTMLworkLocation, activeJob.location, true );
+                addToPage( jobDiv, HTMLworkDates, activeJob.dates, true );
+                addToPage( jobDiv, HTMLworkDescription, activeJob.description, true );
 
             }
 
@@ -72,160 +125,107 @@ projects.display = function() {
 
 };
 
-projects.display();
+projects = {
+    "projects" : [
+        {
+            "title" : "Public Chalk Art",
+            "dates" : "October 2014",
+            "description" : "Drew artwork on public sidewalks.",
+            images: ["images/197x148.gif", "images/197x148.gif"]
+        }
+    ],
+    "display" : function() {
 
-var bio = {
-    "name" : "Phillip Marashian",
-    "role" : "Front-end Developer",
-    "welcomeMessage" : "Hello!",
-    "skills" : ["Javascript", "Angular", "PHP", "HTML", "CSS", "MySQL"],
-    "contacts" : {
-        "mobile" : "408-221-5005",
-        "email" : "phillip.marashian@gmail.com",
-        "github" : "pmarashian",
-        "location" : "San Jose"
-    },
-    "picture" : "images/me.jpg"
+        var activeProject,
+            projectEl;
+
+        for( i in this.projects ) {
+
+            $("#projects").append( HTMLprojectStart );
+
+            activeProject = this.projects[i];
+            projectEl = $(".project-entry:last");
+
+            projectEl.append( HTMLprojectTitle.replace( placeholder, activeProject.title) );
+            projectEl.append( HTMLprojectDates.replace( placeholder, activeProject.dates) );
+            projectEl.append( HTMLprojectDescription.replace( placeholder, activeProject.description) );
+
+            if( activeProject.images.length ) {
+
+                for( image in activeProject.images ) {
+
+                    projectEl.append( HTMLprojectImage.replace( placeholder, activeProject.images[image]) );
+
+                }
+
+            }
+
+        }
+
+    }
 };
 
-var education = {
+education = {
     "schools" : [
         {
-            "name" : "Cal Poly, San Luis Obispo",
-            "location" : "San Luis Obispo, CA, US",
-            "degree" : "Bachelor of Science",
-            "major" : ["Physics"],
-            "dates" : 2002,
-            "url" : "http://www.calpoly.edu/"
+            "name" : "Hogwarts School of Witchcraft and Wizardry, Extension Program",
+            "location" : "Scotland, United Kingdom",
+            "degree" : "Bachelor of Magic",
+            "major" : ["Potions and Brews"],
+            "dates" : 2009,
+            "url" : "http://www.hogwartsishere.com/"
+        },
+        {
+            "name" : "Magic & Mystery School",
+            "location" : "Las Vegas, NV, US",
+            "degree" : "Associate Degree",
+            "major" : ["Magic Tricks"],
+            "dates" : 2008,
+            "url" : "http://www.magicalwisdom.com/"
         }
 
-    ]
-};
-
-education.display = function() {
-
-    var activeSchool,
-        schoolEl,
-        schoolName,
-        schoolDegree;
-
-    if( this.schools.length ) {
-        for( i in this.schools ) {
-
-            $("#education").append( HTMLschoolStart );
-            schoolEl = $(".education-entry:last");
-
-            activeSchool = this.schools[i];
-
-            schoolName = HTMLschoolName.replace(placeholder, activeSchool.name );
-            schoolDegree = HTMLschoolDegree.replace(placeholder, activeSchool.degree);
-
-            schoolEl.append( schoolName + schoolDegree );
-
-            schoolEl.append( HTMLschoolDates.replace(placeholder, activeSchool.dates) );
-            schoolEl.append( HTMLschoolMajor.replace(placeholder, activeSchool.major) );
-            schoolEl.append( HTMLschoolLocation.replace(placeholder, activeSchool.location) );
-
+    ],
+    "onlineCourses" : [
+        {
+            "title" : "How Kitchen Lights Work",
+            "school" : "Kitchen Lights Unlimited",
+            "date" : 2013,
+            "url" : "http://www.kitchenlightsunlimited.com"
         }
+    ],
+    "display" : function() {
+
+        var activeSchool,
+            schoolEl,
+            schoolName,
+            schoolDegree;
+
+        if( this.schools.length ) {
+            for( i in this.schools ) {
+
+                $("#education").append( HTMLschoolStart );
+                schoolEl = $(".education-entry:last");
+
+                activeSchool = this.schools[i];
+
+                schoolName = HTMLschoolName.replace(placeholder, activeSchool.name );
+                schoolDegree = HTMLschoolDegree.replace(placeholder, activeSchool.degree);
+
+                schoolEl.append( schoolName + schoolDegree );
+
+                schoolEl.append( HTMLschoolDates.replace(placeholder, activeSchool.dates) );
+                schoolEl.append( HTMLschoolMajor.replace(placeholder, activeSchool.major) );
+                schoolEl.append( HTMLschoolLocation.replace(placeholder, activeSchool.location) );
+
+            }
+        }
+
     }
-
 };
 
 education.display();
-
-var formattedName = HTMLheaderName.replace( placeholder, bio.name ),
-    formattedRole = HTMLheaderRole.replace( placeholder, bio.role ),
-    formattedWelcomeMsg = HTMLwelcomeMsg.replace( placeholder, bio.welcomeMessage ),
-    formattedBioPic = HTMLbioPic.replace( placeholder, bio.picture );
-
-header.prepend( formattedRole );
-header.prepend( formattedName );
-header.append( formattedWelcomeMsg );
-header.prepend( formattedBioPic );
-
-topContacts.append( HTMLmobile.replace( placeholder, bio.contacts.mobile) );
-topContacts.append( HTMLgithub.replace( placeholder, bio.contacts.github) );
-topContacts.append( HTMLemail.replace( placeholder, bio.contacts.email) );
-topContacts.append( HTMLlocation.replace( placeholder, bio.contacts.location) );
-
-if( bio.skills.length ) {
-
-    header.append( HTMLskillsStart );
-
-    for( var i in bio.skills ) {
-
-        $("#skills").append( HTMLskills.replace( placeholder, bio.skills[i]) );
-
-    }
-
-}
-
-displayWork();
-
-function displayWork() {
-
-    var job,
-        jobEmployer,
-        jobTitle,
-        activeJob,
-        jobLocation,
-        jobDates,
-        jobDescription;
-
-    for( var i in work.jobs ) {
-
-        job = work.jobs[ i ];
-
-        workExperience.append( HTMLworkStart );
-
-        activeJob = $(".work-entry:last");
-
-        jobEmployer = HTMLworkEmployer.replace( placeholder, job.employer );
-        jobTitle = HTMLworkTitle.replace( placeholder, job.title );
-        jobLocation = HTMLworkLocation.replace( placeholder, job.location );
-        jobDates = HTMLworkDates.replace( placeholder, job.dates );
-        jobDescription = HTMLworkDescription.replace( placeholder, job.description );
-
-        activeJob.append( jobEmployer + jobTitle );
-        activeJob.append( jobLocation );
-        activeJob.append( jobDates );
-        activeJob.append( jobDescription );
-
-    }
-
-}
-
-$(document).click(function(loc) {
-
-    //logClicks( loc.pageX, loc.pageY );
-
-});
-
-function locationizer( work_obj ) {
-
-    var locations = [];
-
-    for( i in work_obj.jobs ) {
-
-        locations.push( work_obj.jobs[i].location );
-
-    }
-
-    return locations;
-
-}
-function inName() {
-
-    var names = bio.name.split(" ");
-
-    names[1] = names[1].toUpperCase();
-
-    var firstLetter = names[0][0].toUpperCase();
-
-    names[0] = firstLetter + names[0].slice(1);
-
-    return names.join(" ");
-
-}
+bio.display();
+work.display();
+projects.display();
 
 $("#mapDiv").append( googleMap );
